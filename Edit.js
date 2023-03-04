@@ -18,6 +18,7 @@ function showUserOnScreen(obj){
    const childElement = document.createElement('li');
    childElement.textContent = obj.name + ' - ' + obj.email + ' - ' + obj.phonenumber 
 
+   //adding deleteBtn
    const deleteBtn = document.createElement('input');
    deleteBtn.type = "button";
    deleteBtn.value = 'Delete';
@@ -25,6 +26,8 @@ function showUserOnScreen(obj){
       localStorage.removeItem(obj.email);
       localStorage.removeChild(childElement);
    }
+
+   //adding editBtn
    const editBtn = document.createElement('input');
    editBtn.type = "button";
    editBtn.value = 'Edit';
