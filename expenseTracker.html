@@ -50,7 +50,9 @@
                choose_description, 
                category
             }
-            localStorage.setItem(obj.choose_description, JSON.stringify(obj));
+            localStorage.setItem('choose_expenseamount', obj.choose_expenseamount, JSON.stringify(obj));
+            localStorage.setItem('choose_description', obj.choose_description, JSON.stringify(obj));
+            localStorage.setItem('category', obj.category, JSON.stringify(obj));
             showUserOnScreen(obj);
          }
          function showUserOnScreen(obj){
@@ -64,8 +66,11 @@
             
         
             deleteBtn.onclick = () => {
-               localStorage.removeItem(obj.choose_description);
+                localStorage.removeItem('choose_expenseamount', obj.choose_expenseamount);
+               localStorage.removeItem('choose_description', obj.choose_description);
+               localStorage.removeItem('category', obj.category);
                parentElement.removeChild(childElement);
+               
             };
             const editBtn = document.createElement('input');
         editBtn.type = "button";
@@ -81,7 +86,10 @@
             choose_description: updatedDescription,
             category: updatedCategory
         };
-        localStorage.setItem(updatedDescription, JSON.stringify(updatedObj));
+        localStorage.setItem('choose_expenseamount',updatedExpenseAmount, JSON.stringify(updatedObj));
+        localStorage.setItem('choose_description', updatedDescription, JSON.stringify(updatedObj));
+        localStorage.setItem('category', updatedCategory, JSON.stringify(updatedObj));
+
         childElement.textContent = updatedExpenseAmount + ' - ' + updatedDescription + ' - ' + updatedCategory;
     };
 
