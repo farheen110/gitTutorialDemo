@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <section class = "container">
+        <form onsubmit = "saveTolocalStorage(event)">
+            <h1>Add user</h1>
+            <div class = "msg"></div>
+            <div>
+                
+                <label for = "choose_expenseamount">Choose expense amount:</label>
+                <Input type = "number"  name = "choose_expenseamount"/>
+            
+                <label for="choose_description">Choose description:</label>
+                <input type = "text" name = "choose_description" id="choose_description">
+            <label for="category">Choose a category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="fuel">fuel</option>
+                <option value="food">food</option>
+                <option value="electricity">electricity</option>
+                <option value="movies">movies</option>
+              </select>
+             
+              <button type="submit" class="btn" id="submit">Add expense</button>
+             
+              </div>
+              </div>
+              
+            </form>
+          
+            <ul id = 'listOfitems'></ul>
+          </section>
+        
+      
+          <script>
+          function saveTolocalStorage(event){
+            event.preventDefault();
+            const choose_expenseamount = event.target.choose_expenseamount.value;
+            const choose_description = event.target.choose_description.value;
+            const category = event.target.category.value;
+         
+            const obj = {
+               choose_expenseamount,
+               choose_description, 
+               category
+            }
+            localStorage.setItem(obj.choose_description, JSON.stringify(obj));
+            showUserOnScreen(obj);
+         }
+         function showUserOnScreen(obj){
+            const parentElement = document.getElementById('listOfitems');
+            const childElement = document.createElement('li');
+            childElement.textContent = obj.choose_expenseamount + ' - ' + obj.choose_description + ' - ' + obj.category 
+         
+            const deleteBtn = document.createElement('input');
+            deleteBtn.type = "button";
+            deleteBtn.value = 'Delete Expense';
+            
+        
+            deleteBtn.onclick = () => {
+               localStorage.removeItem(obj.choose_description);
+               parentElement.removeChild(childElement);
+            };
+            const editBtn = document.createElement('input');
+        editBtn.type = "button";
+        editBtn.value = 'Edit Expense';
+
+    editBtn.onclick = () => {
+        const updatedExpenseAmount = prompt('Enter the updated expense amount:', obj.choose_expenseamount);
+        const updatedDescription = prompt('Enter the updated description:', obj.choose_description);
+        const updatedCategory = prompt('Enter the updated category:', obj.category);
+
+        const updatedObj = {
+            choose_expenseamount: updatedExpenseAmount,
+            choose_description: updatedDescription,
+            category: updatedCategory
+        };
+        localStorage.setItem(updatedDescription, JSON.stringify(updatedObj));
+        childElement.textContent = updatedExpenseAmount + ' - ' + updatedDescription + ' - ' + updatedCategory;
+    };
+
+    childElement.appendChild(deleteBtn);
+    childElement.appendChild(editBtn);
+    parentElement.appendChild(childElement);
+}
+
+ </script>
+        </body>
+      </html>
