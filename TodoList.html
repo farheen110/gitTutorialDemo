@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet">
+</head>
+<body>
+    <section class="container">
+        <form onsubmit="saveToLocalStorage(event)">
+            <div class="msg"></div>
+            <div>
+                <label for="selling_price">Selling Price:</label>
+                <input type="number" name="selling_price">
+
+                <label for="product_name">Product Name:</label>
+                <input type="text" name="product_name">
+        
+                    <button type="submit" class="btn" id="submit">Add Product</button>
+                </div>
+                <h1>Products</h1>
+                <div id="totalValue" style="font-weight: bold;">Total Value Worth of Products: Rs 0</div>
+            </div>
+        </form>
+          
+        <ul id="listOfitems"></ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    </section>
+          
+    <script>
+      let totalValue = 0;
+
+// Check for data in local storage when page loads
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  const obj = JSON.parse(localStorage.getItem(key));
+  showUserOnScreen(obj);
+}
+
+function saveToLocalStorage(event) {
+  event.preventDefault();
+  const selling_price = event.target.selling_price.value;
+  const product_name = event.target.product_name.value;
+
+  const obj = {
+    selling_price,
+    product_name,
+  };
+
+  axios
+    .post(
+      "https://crudcrud.com/api/9a34c93a0e0a4191ba6e0806a83fb23a/Products",
+      obj
+    )
+    .then((response) => {
+      obj._id = response.data._id; // set the unique ID returned by the server
+      showUserOnScreen(obj);
+      localStorage.setItem(obj._id, JSON.stringify(obj));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function showUserOnScreen(obj) {
+  const parentElement = document.getElementById("listOfitems");
+  const childElement = document.createElement("li");
+  childElement.textContent = obj.selling_price + " - " + obj.product_name + " - ";
+
+  //adding deleteBtn
+  const deleteBtn = document.createElement("input");
+  deleteBtn.type = "button";
+  deleteBtn.value = "Delete Product";
+  deleteBtn.onclick = () => {
+    axios
+      .delete(
+        "https://crudcrud.com/api/9a34c93a0e0a4191ba6e0806a83fb23a/Products/" +
+          obj._id
+      )
+      .then(() => {
+        parentElement.removeChild(childElement);
+        localStorage.removeItem(obj._id); // removing from local storage
+        updateTotalValue();
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  childElement.appendChild(deleteBtn);
+  parentElement.appendChild(childElement);
+  localStorage.setItem(obj._id, JSON.stringify(obj));
+  updateTotalValue();
+}
+
+function updateTotalValue() {
+  const parentElement = document.getElementById("listOfitems");
+  const childElements = parentElement.getElementsByTagName("li");
+  let totalValue = 0;
+
+  // calculate total value from data in local storage
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const obj = JSON.parse(localStorage.getItem(key));
+    totalValue += Number(obj.selling_price);
+  }
+
+  // calculate total value from data on screen
+  for (let i = 0; i < childElements.length; i++) {
+    const selling_price = childElements[i].textContent.split(" - ")[0];
+    totalValue += Number(selling_price);
+  }
+
+  const totalElement = document.getElementById("totalValue");
+  totalElement.textContent = "Total Value Worth of Products: " + totalValue;
+}
+
+
+
+    </script>
+</body>
+</html>
