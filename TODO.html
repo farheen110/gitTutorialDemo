@@ -57,7 +57,7 @@
     category
   };
 
-  axios.post("https://crudcrud.com/api/2a5db3edc9f94b21b798e45dda2656dd/Product", product)
+  axios.post("https://crudcrud.com/api/c272ab3d277f47b8a93bf8e27fc2e06a/Product", product)
     .then(response => {
       product._id = response.data._id;
       showUserOnScreen(product);
@@ -81,7 +81,7 @@ function showUserOnScreen(obj) {
   deleteBtn.value = "Delete Order";
   deleteBtn.onclick = () => {
     if (obj._id) {
-      axios.delete("https://crudcrud.com/api/2a5db3edc9f94b21b798e45dda2656dd/Product/" + obj._id)
+      axios.delete("https://crudcrud.com/api/c272ab3d277f47b8a93bf8e27fc2e06a/Product/" + obj._id)
         .then(() => {
           parentElement.removeChild(childElement); // remove child element from parent element
           localStorage.removeItem(obj._id); // remove from local storage
@@ -127,8 +127,7 @@ function updateTotalValue() {
   document.querySelector("#totalPrice").textContent = totalPrice;
 }
 
-getProductsFromLocalStorage();
-updateTotalValue();
+
 
 
 
