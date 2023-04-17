@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet">
+</head>
+<body>
+    <section class="container">
+        <form onsubmit="saveToLocalStorage(event)">
+            <div class="msg"></div>
+            <div>
+              <label for="selling_price">Selling Price:</label>
+              <input type="number" name="selling_price">
+          
+              <label for="product_name">Product Name:</label>
+              <input type="text" name="product_name">
+          
+              <label for="category">Choose a category:</label>
+              <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="electronics">Electronics</option>
+                <option value="food">Food</option>
+                <option value="Skincare">SkinCare</option>
+              </select>
+          
+              <button type="submit" class="btn" id="submit">Add Product</button>
+            </div>
+          
+            <h1>Products</h1>
+            <h3>Electronic Items</h3>
+            <ul id="electronicList"></ul>
+            <h3>Food Items</h3>
+            <ul id="foodList"></ul>
+            <h3>Skincare Items</h3>
+            <ul id="skincareList"></ul>
+          </form>
+          
+          <ul id="listOfitems"></ul>
+          
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+          
+          <script>
+
+    function saveToLocalStorage(event) {
+  event.preventDefault();
+
+  const selling_price = document.querySelector('input[name="selling_price"]').value;
+  const product_name = document.querySelector('input[name="product_name"]').value;
+  const category = document.getElementById("category").value;
+
+  const product = {
+    selling_price,
+    product_name,
+    category
+  };
+
+  axios.post("https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product", product)
+    .then(response => {
+      product._id = response.data._id;
+      showUserOnScreen(product);
+      document.querySelector('.msg').textContent;
+    })
+    .catch(error => console.log(error));
+
+  // document.querySelector('input[name="selling_price"]').value = "";
+  // document.querySelector('input[name="product_name"]').value = "";
+  // document.getElementById("category").selectedIndex = 0;
+}
+
+function showUserOnScreen(obj) {
+  const parentElement = document.getElementById("listOfitems");
+  const childElement = document.createElement("li");
+  childElement.setAttribute("data-id", obj._id); // add unique identifier to child element
+
+  // declare deleteBtn
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+
+  //adding deleteBtn
+  deleteBtn.onclick = () => {
+    const parentElement = childElement.parentNode;
+    parentElement.removeChild(childElement);
+    if (obj._id) {
+      localStorage.removeItem(obj._id); // remove item from local storage
+      axios.delete(`https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product/${obj._id}`)
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
+    }
+  };
+
+  childElement.appendChild(deleteBtn);
+
+  // add item to corresponding category list
+  if (obj.category === "electronics") {
+    const electronicList = document.getElementById("electronicList");
+    electronicList.appendChild(childElement);
+  } else if (obj.category === "food") {
+    const foodList = document.getElementById("foodList");
+    foodList.appendChild(childElement);
+  } else if (obj.category === "Skincare") {
+    const skincareList = document.getElementById("skincareList");
+    skincareList.appendChild(childElement);
+  }
+
+  // check if object exists in local storage
+  const savedObject = localStorage.getItem(obj._id);
+  if (savedObject) {
+    // retrieve product data from local storage
+    const product = JSON.parse(savedObject);
+    childElement.textContent = product.selling_price + " - " + product.product_name + " - " + product.category + " - ";
+    childElement.appendChild(deleteBtn);
+  } else {
+    // display product data
+    childElement.textContent = obj.selling_price + " - " + obj.product_name + " - " + obj.category + " - ";
+    childElement.appendChild(deleteBtn);
+
+    // store product data in local storage
+    localStorage.setItem(obj._id, JSON.stringify(obj));
+  }
+}
+
+// function to fetch product data from API and display it on screen
+function fetchProducts() {
+  axios.get("https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product")
+    .then(response => {
+      const products = response.data;
+      for (const product of products) {
+        showUserOnScreen(product);
+      }
+    })
+    .catch(error => console.log(error));
+}
+
+// call fetchProducts function when the page loads
+window.addEventListener("load", fetchProducts);
+
+
+    </script>
+</body>
+</html>
