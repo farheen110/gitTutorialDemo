@@ -51,7 +51,7 @@ function saveToLocalStorage(event) {
 
   axios
     .post(
-      "https://crudcrud.com/api/9a34c93a0e0a4191ba6e0806a83fb23a/Products",
+      "https://crudcrud.com/api/611342df74c54c2fa4e589edd45f3d3a/Products",
       obj
     )
     .then((response) => {
@@ -76,7 +76,7 @@ function showUserOnScreen(obj) {
   deleteBtn.onclick = () => {
     axios
       .delete(
-        "https://crudcrud.com/api/9a34c93a0e0a4191ba6e0806a83fb23a/Products/" +
+        "https://crudcrud.com/api/611342df74c54c2fa4e589edd45f3d3a/Products/" +
           obj._id
       )
       .then(() => {
@@ -101,13 +101,6 @@ function updateTotalValue() {
   const childElements = parentElement.getElementsByTagName("li");
   let totalValue = 0;
 
-  // calculate total value from data in local storage
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const obj = JSON.parse(localStorage.getItem(key));
-    totalValue += Number(obj.selling_price);
-  }
-
   // calculate total value from data on screen
   for (let i = 0; i < childElements.length; i++) {
     const selling_price = childElements[i].textContent.split(" - ")[0];
@@ -115,8 +108,9 @@ function updateTotalValue() {
   }
 
   const totalElement = document.getElementById("totalValue");
-  totalElement.textContent = "Total Value Worth of Products: " + totalValue;
+  totalElement.textContent = "Total Value Worth of Products: Rs " + totalValue;
 }
+
 
 
 
