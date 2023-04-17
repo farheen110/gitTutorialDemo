@@ -57,7 +57,7 @@
     category
   };
 
-  axios.post("https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product", product)
+  axios.post("https://crudcrud.com/api/4e93f01916a44969ac3f7f54b7e32e37/Product", product)
     .then(response => {
       product._id = response.data._id;
       showUserOnScreen(product);
@@ -77,7 +77,7 @@ function showUserOnScreen(obj) {
 
   // declare deleteBtn
   const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Delete";
+  deleteBtn.textContent = "Delete Product";
 
   //adding deleteBtn
   deleteBtn.onclick = () => {
@@ -85,7 +85,7 @@ function showUserOnScreen(obj) {
     parentElement.removeChild(childElement);
     if (obj._id) {
       localStorage.removeItem(obj._id); // remove item from local storage
-      axios.delete(`https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product/${obj._id}`)
+      axios.delete(`https://crudcrud.com/api/4e93f01916a44969ac3f7f54b7e32e37/Product/${obj._id}`)
         .then(response => console.log(response))
         .catch(error => console.log(error));
     }
@@ -124,7 +124,7 @@ function showUserOnScreen(obj) {
 
 // function to fetch product data from API and display it on screen
 function fetchProducts() {
-  axios.get("https://crudcrud.com/api/065e117201184d9ba362f1c9ecc74448/Product")
+  axios.get("https://crudcrud.com/api/4e93f01916a44969ac3f7f54b7e32e37/Product")
     .then(response => {
       const products = response.data;
       for (const product of products) {
